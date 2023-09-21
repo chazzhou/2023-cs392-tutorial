@@ -1,4 +1,4 @@
-import { Card, CardBody, CardHeader, Divider } from '@nextui-org/react';
+import { Card, CardBody, CardHeader, Divider, Skeleton } from '@nextui-org/react';
 
 const Course = ({ course }) => (
     <Card shadow className="basis-1/4 h-48">
@@ -15,9 +15,26 @@ const Course = ({ course }) => (
     </Card>
 );
 
-const CourseList = ({ courses }) => (
+export const CourseList = ({ courses }) => (
     <div class="grid md:grid-cols-4 gap-4 w-5/6 sm:grid-cols-1 m-4">
         {Object.values(courses).map(course => <Course course={course} />)}
+    </div>
+);
+
+const SkeletonCourse = () => (
+    <Card shadow className="basis-1/4 h-48">
+        <Skeleton className="rounded-lg">
+            <div className="h-48 rounded-lg bg-default-300"></div>
+        </Skeleton>
+    </Card>
+);
+
+export const SkeletonCourseList = () => (
+    <div class="grid md:grid-cols-4 gap-4 w-5/6 sm:grid-cols-1 m-4">
+        <SkeletonCourse />
+        <SkeletonCourse />
+        <SkeletonCourse />
+        <SkeletonCourse />
     </div>
 );
 
