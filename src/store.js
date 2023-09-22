@@ -1,26 +1,20 @@
 import { create } from "zustand";
-const schdule = {
-    "title": "CS Courses for 2018-2019",
-    "courses": {
-        "F101": {
-            "term": "Fall",
-            "number": "101",
-            "meets": "MWF 11:00-11:50",
-            "title": "Computer Science: Concepts, Philosophy, and Connections"
-        },
-    }
-}
+
 const useStore = create((set) => ({
     schedule: { title: "", courses: [] },
     setSchedule: (schedule) => set({ schedule }),
-    updateExisitingCourse: (course) => {
-        // first, calculate the key of the course
-        const key = course.term + course.number;
-        // then, update the course in the schedule using the key
+    updateExisitingCourse: (oldCourse, newCourse) => {
+        // calculate the key of the course
+        const old_key = oldCourse.term[0] + oldCourse.number;
+        const new_key = newCourse.term[0] + newCourse.number;
+        // update the course in the schedule using the key
         set((state) => {
-            const { schedule } = state;
-            schedule.courses[key] = course;
-            return { schedule };
+            const updatedSchedule = { ...state.schedule };
+            // remove the old course
+            delete updatedSchedule.courses[old_key];
+            // add the new course
+            updatedSchedule.courses[new_key] = newCourse;
+            return { schedule: updatedSchedule };
         });
     },
     terms: ["Fall", "Winter", "Spring"],

@@ -51,7 +51,7 @@ export const CourseList = ({ courses }) => {
     const removeCourse = useStore(state => state.removeCourse);
 
     const filteredCourses = Object.values(courses).filter(course => course.term === term);
-
+    
     const addCourseToSchedule = (course) => {
         // if course is already in schedule, remove it
         if (selectedCourses.indexOf(course) !== -1) {
@@ -93,7 +93,7 @@ export const CourseList = ({ courses }) => {
                     onClick={() => addCourseToSchedule(course)}
                     selectedCourses={selectedCourses}
                     canAdd={true}
-                    key={course.number}
+                    key={`${course.term}-${course.number}`}
                 />
             )}
         </div>
