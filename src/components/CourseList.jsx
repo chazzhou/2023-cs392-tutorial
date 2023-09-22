@@ -1,4 +1,7 @@
+import React from 'react';
+
 import { Card, CardBody, CardHeader, Divider, Skeleton } from '@nextui-org/react';
+import useStore from '../store';
 
 const Course = ({ course }) => (
     <Card shadow className="basis-1/4 h-48">
@@ -15,11 +18,15 @@ const Course = ({ course }) => (
     </Card>
 );
 
-export const CourseList = ({ courses }) => (
+export const CourseList = ({ courses }) => {
+    const term = useStore(state => state.term);
+
+    const filteredCourses = Object.values(courses).filter(course => course.term === term);
+    return (
     <div class="grid md:grid-cols-4 gap-4 w-5/6 sm:grid-cols-1 m-4">
-        {Object.values(courses).map(course => <Course course={course} />)}
+        {Object.values(filteredCourses).map(course => <Course course={course} />)}
     </div>
-);
+)};
 
 const SkeletonCourse = () => (
     <Card shadow className="basis-1/4 h-48">
