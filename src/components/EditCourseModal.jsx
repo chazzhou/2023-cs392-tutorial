@@ -56,7 +56,7 @@ const EditCourseModal = ({ course }) => {
 
         const checkConflict = hasConflictWithSelected(newCourse, selectedCourses);
 
-        const daysValid = days.match(/^(M|T|W|Th|F|Sa|Su)+$/g);
+        const daysValid = days.match(/^(M|Tu|W|Th|F|Sa|Su)+$/g);
         const timesValid = startTime.match(/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/g) && endTime.match(/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/g);
         const startBeforeEnd = startTime < endTime;
 
@@ -129,7 +129,7 @@ const EditCourseModal = ({ course }) => {
                                     Close
                                 </Button>
                                 <Button onClick={onSave} color="primary" disabled={!allValid()} isDisabled={!allValid()}>
-                                    Save
+                                    Submit
                                 </Button>
                             </ModalFooter>
                         </>

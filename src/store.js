@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { writeToDb } from "./utils/firebase";
 
 const useStore = create((set) => ({
     schedule: { title: "", courses: [] },
@@ -14,6 +15,8 @@ const useStore = create((set) => ({
             delete updatedSchedule.courses[old_key];
             // add the new course
             updatedSchedule.courses[new_key] = newCourse;
+            // update the course in the database
+            writeToDb("/", updatedSchedule);
             return { schedule: updatedSchedule };
         });
     },
