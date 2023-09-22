@@ -4,10 +4,8 @@ import './App.css';
 import useStore from "./store";
 import { useDbData } from "./utils/firebase";
 
-import Banner from './components/Banner';
 import { CourseList, SkeletonCourseList } from './components/CourseList';
-import TermSelector from "./components/TermSelector";
-import ScheduleModal from "./components/ScheduleModal";
+import Navigation from "./components/Navigation";
 
 const App = () => {
   const schedule = useStore(state => state.schedule);
@@ -24,9 +22,7 @@ const App = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <Banner title={schedule.title} />
-        <TermSelector />
-        <ScheduleModal />
+        <Navigation title={schedule.title}/>
         {schedule.title ? <CourseList courses={schedule.courses} /> : <SkeletonCourseList />}
       </header>
     </div>

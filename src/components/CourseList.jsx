@@ -5,8 +5,9 @@ import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDis
 import useStore from '../store';
 import hasConflictWithSelected from '../utils/times';
 import EditCourseModal from './EditCourseModal';
+import { useAuthState } from '../utils/firebase';
 
-const Course = ({ course, onClick = () => { }, canAdd = false }) => {
+const Course = ({ course, onClick = () => { }, canAdd = false, canEdit = false}) => {
     const selectedCourses = useStore(state => state.selectedCourses);
     const isSelected = selectedCourses.indexOf(course) !== -1 && canAdd;
     const conflict = hasConflictWithSelected(course, selectedCourses);
@@ -29,7 +30,9 @@ const Course = ({ course, onClick = () => { }, canAdd = false }) => {
                         Add
                     </Button>
                 ) : null}
-                <EditCourseModal course={course} />
+                {canEdit ? (
+                    <EditCourseModal course={course} />
+                ) : null}
             </CardFooter>
         </Card>
     )
@@ -37,6 +40,7 @@ const Course = ({ course, onClick = () => { }, canAdd = false }) => {
 
 export const CourseList = ({ courses }) => {
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const [user] = useAuthState();
 
     if (Object.keys(courses).length === 0) {
         return (
@@ -93,6 +97,7 @@ export const CourseList = ({ courses }) => {
                     onClick={() => addCourseToSchedule(course)}
                     selectedCourses={selectedCourses}
                     canAdd={true}
+                    canEdit={user}
                     key={`${course.term}-${course.number}`}
                 />
             )}
