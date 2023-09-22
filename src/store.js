@@ -5,11 +5,13 @@ const useStore = create((set) => ({
     term: "Fall",
     setTerm: (term) => set({ term }),
     selectedCourses: [],
-    setCourses: (course) =>
+    addCourse: (course) =>
         set((state) => ({
-            selectedCourses: state.selectedCourses.includes(course)
-                ? state.selectedCourses.filter((x) => x !== course)
-                : [...state.selectedCourses, course],
+            selectedCourses: [...state.selectedCourses, course],
+        })),
+    removeCourse: (course) =>
+        set((state) => ({
+            selectedCourses: state.selectedCourses.filter((x) => x !== course),
         })),
 }));
 

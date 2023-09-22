@@ -1,14 +1,17 @@
 import React from 'react';
 
 import { Card, CardBody, CardHeader, Divider, Skeleton } from '@nextui-org/react';
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
 import useStore from '../store';
+import hasConflictWithSelected from '../utils/times';
 
 const Course = ({ course, onClick = () => { }, isPressable = false }) => {
     const selectedCourses = useStore(state => state.selectedCourses);
     const isSelected = selectedCourses.indexOf(course) !== -1 && isPressable;
+    const conflict = hasConflictWithSelected(course, selectedCourses);
     return (
         <Card shadow isPressable={isPressable} className={`basis-1/4 h-48 ${isSelected ? '' : 'hover:bg-gray-300'}`} onClick={onClick}>
-            <CardHeader className={`}flex gap-3 ${isSelected ? 'bg-green-300' : ''}`}>
+            <CardHeader className={`}flex gap-3 ${isSelected ? 'bg-green-300' : ''} ${conflict ? 'bg-red-300' : ''}`}>
                 <div className="flex flex-col justify-start items-start">
                     <p className="text-md text-left">{course.term} CS {course.number}</p>
                     <p className="text-small text-default-500 text-left">{course.title}</p>
@@ -23,6 +26,8 @@ const Course = ({ course, onClick = () => { }, isPressable = false }) => {
 };
 
 export const CourseList = ({ courses }) => {
+    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+
     if (Object.keys(courses).length === 0) {
         return (
             <p className="text-center text-2xl">No courses found.</p>
@@ -32,19 +37,55 @@ export const CourseList = ({ courses }) => {
     const term = useStore(state => state.term);
     const selectedCourses = useStore(state => state.selectedCourses);
 
-    const setCourses = useStore(state => state.setCourses);
+    const addCourse = useStore(state => state.addCourse);
+    const removeCourse = useStore(state => state.removeCourse);
 
     const filteredCourses = Object.values(courses).filter(course => course.term === term);
 
+    const addCourseToSchedule = (course) => {
+        // if course is already in schedule, remove it
+        if (selectedCourses.indexOf(course) !== -1) {
+            removeCourse(course);
+            return;
+        }
+
+        if (hasConflictWithSelected(course, selectedCourses)) {
+            onOpen();
+            return;
+        }
+        addCourse(course);
+    }
+
     return (
         <div className="grid md:grid-cols-4 gap-4 w-5/6 sm:grid-cols-1 m-4">
-            {Object.values(filteredCourses).map(course => <Course
-                course={course}
-                onClick={() => setCourses(course)}
-                selectedCourses={selectedCourses}
-                key={course.number}
-                isPressable={true}
-            />)}
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+                <ModalContent>
+                    {(onClose) => (
+                        <>
+                            <ModalHeader className="flex flex-col gap-1">Conflict Detected</ModalHeader>
+                            <ModalBody>
+                                <p>
+                                    Unable to add course due to conflict with the current schedule.
+                                </p>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="primary" onPress={onClose}>
+                                    Close
+                                </Button>
+                            </ModalFooter>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal>
+            {Object.values(filteredCourses).map(course =>
+                <Course
+                    course={course}
+                    onClick={() => addCourseToSchedule(course)}
+                    selectedCourses={selectedCourses}
+                    isPressable={true}
+                    key={course.number}
+                />
+            )}
         </div>
     )
 };
