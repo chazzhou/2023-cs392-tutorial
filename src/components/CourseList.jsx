@@ -1,17 +1,18 @@
 import React from 'react';
 
-import { Card, CardBody, CardHeader, Divider, Skeleton } from '@nextui-org/react';
+import { Card, CardBody, CardHeader, CardFooter, Divider, Skeleton } from '@nextui-org/react';
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
 import useStore from '../store';
 import hasConflictWithSelected from '../utils/times';
+import EditCourseModal from './EditCourseModal';
 
-const Course = ({ course, onClick = () => { }, isPressable = false }) => {
+const Course = ({ course, onClick = () => { }, canAdd = false }) => {
     const selectedCourses = useStore(state => state.selectedCourses);
-    const isSelected = selectedCourses.indexOf(course) !== -1 && isPressable;
+    const isSelected = selectedCourses.indexOf(course) !== -1 && canAdd;
     const conflict = hasConflictWithSelected(course, selectedCourses);
     return (
-        <Card shadow isPressable={isPressable} className={`basis-1/4 h-48 ${isSelected ? '' : 'hover:bg-gray-300'}`} onClick={onClick}>
-            <CardHeader className={`}flex gap-3 ${isSelected ? 'bg-green-300' : ''} ${conflict ? 'bg-red-300' : ''}`}>
+        <Card shadow className={`basis-1/4 h-48`}>
+            <CardHeader className={`flex gap-3 ${isSelected ? 'bg-green-300' : ''} ${conflict ? 'bg-red-300' : ''}`}>
                 <div className="flex flex-col justify-start items-start">
                     <p className="text-md text-left">{course.term} CS {course.number}</p>
                     <p className="text-small text-default-500 text-left">{course.title}</p>
@@ -21,6 +22,15 @@ const Course = ({ course, onClick = () => { }, isPressable = false }) => {
             <CardBody>
                 <p>{course.meets}</p>
             </CardBody>
+            <Divider />
+            <CardFooter>
+                {canAdd ? (
+                    <Button color="primary" onClick={onClick}>
+                        Add
+                    </Button>
+                ) : null}
+                <EditCourseModal course={course} />
+            </CardFooter>
         </Card>
     )
 };
@@ -82,7 +92,7 @@ export const CourseList = ({ courses }) => {
                     course={course}
                     onClick={() => addCourseToSchedule(course)}
                     selectedCourses={selectedCourses}
-                    isPressable={true}
+                    canAdd={true}
                     key={course.number}
                 />
             )}

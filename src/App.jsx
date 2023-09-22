@@ -1,6 +1,7 @@
 import React from "react";
 
 import './App.css';
+import useStore from "./store";
 
 import Banner from './components/Banner';
 import {CourseList, SkeletonCourseList} from './components/CourseList';
@@ -19,7 +20,8 @@ const fetchJSON = async (url) => {
 
 
 const App = () => {
-  const [schedule, setSchedule] = React.useState({ title: "", courses: [] });
+  const schedule = useStore(state => state.schedule);
+  const setSchedule = useStore(state => state.setSchedule);
 
   React.useEffect(() => {
     fetchJSON('https://courses.cs.northwestern.edu/394/guides/data/cs-courses.php').then(data => {
