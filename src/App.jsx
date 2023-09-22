@@ -5,6 +5,7 @@ import './App.css';
 import Banner from './components/Banner';
 import {CourseList, SkeletonCourseList} from './components/CourseList';
 import TermSelector from "./components/TermSelector";
+import ScheduleModal from "./components/ScheduleModal";
 
 const fetchJSON = async (url) => {
   try {
@@ -32,6 +33,7 @@ const App = () => {
         <header className="App-header">
           <Banner title={schedule.title} />
           <TermSelector />
+          <ScheduleModal />
           {schedule.title ? <CourseList courses={schedule.courses} /> : <SkeletonCourseList />}
         </header>
       </div>

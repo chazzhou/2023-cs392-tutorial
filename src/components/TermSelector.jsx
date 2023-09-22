@@ -12,7 +12,7 @@ const TermSelector = () => {
         <ButtonGroup>
             {terms.map((term, index) => (
                 <Button
-                    key={index}
+                    key={`term-${index}`}
                     onClick={() => setTerm(term)}
                 >
                     {term}
