@@ -2,29 +2,41 @@ import { React, useEffect } from "react";
 
 import './App.css';
 import useStore from "./store";
-import { useDbData } from "./utils/firebase";
+import { getDbData } from "./utils/firebase";
 
 import { CourseList, SkeletonCourseList } from './components/CourseList';
 import Navigation from "./components/Navigation";
+import { useAuthState } from './utils/firebase';
 
 const App = () => {
   const schedule = useStore(state => state.schedule);
   const setSchedule = useStore(state => state.setSchedule);
+  const [user] = useAuthState();
 
-  // set schedule on first render from database
-  const [data, error] = useDbData("/");
   useEffect(() => {
-    if (data && !schedule.title) {
-      setSchedule(data);
+    console.log(user, schedule.title)
+    if (user && !schedule.title) {
+      getDbData("/").then((data) => {
+        setSchedule(data);
+      }).catch((error) => {
+        console.log(error);
+      });
+    } else if (!user && schedule.title) {
+      setSchedule({ title: "", courses: [] });
     }
-  }, [data, schedule.title, setSchedule]);
+  }, [user, schedule.title, setSchedule]);
 
   return (
     <div className="App">
-      <header className="App-header">
-        <Navigation title={schedule.title}/>
+      <div className="App-container">
+        <Navigation title={schedule.title} />
         {schedule.title ? <CourseList courses={schedule.courses} /> : <SkeletonCourseList />}
-      </header>
+        {!user && <p className="text-center text-2xl my-16">Please sign in to continue.</p>}
+      </div>
+      <footer className="w-full my-4">
+          <p className="text-center text-default-500 text-sm">Northwestern University</p>
+          <p className="text-center text-default-500 text-sm">© 2023 Charles H. Zhou</p>
+        </footer>
     </div>
   );
 };

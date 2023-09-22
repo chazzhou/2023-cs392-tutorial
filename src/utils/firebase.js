@@ -4,7 +4,7 @@ import { initializeApp } from "firebase/app";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 import { useEffect, useState, useCallback } from 'react';
-import { getDatabase, onValue, ref, update } from 'firebase/database';
+import { getDatabase, onValue, ref, update, get } from 'firebase/database';
 import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 
 // Your web app's Firebase configuration
@@ -37,6 +37,11 @@ export const useDbData = (path) => {
 
     return [data, error];
 };
+
+export const getDbData = async (path) => {
+    const snapshot = await get(ref(database, path));
+    return snapshot.val();
+}
 
 const makeResult = (error) => {
     const timestamp = Date.now();
