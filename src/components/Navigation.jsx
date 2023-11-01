@@ -22,12 +22,8 @@ const Navigation = ({ title }) => {
             </NavbarBrand>
 
             <NavbarContent className="hidden sm:flex gap-4" justify="center">
-                {user && (
-                    <>
-                        <TermSelector />
-                        <ScheduleModal />
-                    </>
-                )}
+                <TermSelector />
+                <ScheduleModal />
             </NavbarContent>
 
             <NavbarContent as="div" justify="end">

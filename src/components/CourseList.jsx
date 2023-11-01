@@ -14,7 +14,7 @@ const Course = ({ course, onClick = () => { }, canAdd = false, canEdit = false})
     return (
         <Card className={`basis-1/4 h-48`} shadow='lg'>
             <CardHeader className={`flex gap-3 ${isSelected ? 'bg-green-300' : ''} ${conflict ? 'bg-red-300' : ''}`}>
-                <div className="flex flex-col justify-start items-start">
+                <div className="flex flex-col justify-start items-start" data-cy="course">
                     <p className="text-md text-left">{course.term} CS {course.number}</p>
                     <p className="text-small text-default-500 text-left">{course.title}</p>
                 </div>

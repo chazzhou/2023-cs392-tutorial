@@ -14,15 +14,12 @@ const App = () => {
   const [user] = useAuthState();
 
   useEffect(() => {
-    console.log(user, schedule.title)
-    if (user && !schedule.title) {
+    if (!schedule.title) {
       getDbData("/").then((data) => {
         setSchedule(data);
       }).catch((error) => {
         console.log(error);
       });
-    } else if (!user && schedule.title) {
-      setSchedule({ title: "", courses: [] });
     }
   }, [user, schedule.title, setSchedule]);
 
@@ -31,7 +28,7 @@ const App = () => {
       <div className="App-container">
         <Navigation title={schedule.title} />
         {schedule.title ? <CourseList courses={schedule.courses} /> : <SkeletonCourseList />}
-        {!user && <p className="text-center text-2xl my-16">Please sign in to continue.</p>}
+        {!user && <p className="text-center text-2xl my-16" data-cy="login-prompt">Please sign in to continue.</p>}
       </div>
       <footer className="w-full my-4">
           <p className="text-center text-default-500 text-sm">Northwestern University</p>

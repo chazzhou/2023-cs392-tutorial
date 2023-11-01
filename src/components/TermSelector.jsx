@@ -16,6 +16,7 @@ const TermSelector = () => {
                     key={`term-${index}`}
                     onClick={() => setTerm(term)}
                     className={term === selected_term ? "bg-gradient-to-tr from-purple-500 to-yellow-500 text-white" : ""}
+                    data-cy={term}
                 >
                     {term}
                 </Button>
